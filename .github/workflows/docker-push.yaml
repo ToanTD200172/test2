@@ -40,10 +40,10 @@ jobs:
       - name: Update Repo Manifest
         run: |
           cd Repo-config
-          sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}|g" ./deploy.yaml
+          sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}|g" deploy.yaml
 
       - name: Commit and Push Updated Manifest
         run: |
-          git add deploy.yaml
+          git add .
           git commit -m "Update manifest to use image ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}"
           git push -u origin main
