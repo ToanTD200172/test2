@@ -41,6 +41,8 @@ jobs:
         run: |
           cd Repo-config
           sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}|g" deploy.yaml
+          git config --global user.email "txphan99@gmail.com"
+          git config --global user.name "txphan99"
           git add .
           git commit -m "Update manifest to use image ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}"
           git push 
