@@ -30,6 +30,12 @@ jobs:
           git clone https://${{ secrets.REPO_PAT }}@github.com/${{ secrets.REPO_OWNER }}/${{ secrets.REPO_NAME }}.git Repo-config
           cd Repo-config
           git checkout main
+
+      - name: Debug External Repo Files
+        run: |
+          cd Repo-config
+          ls -la  # Liệt kê tất cả các file để kiểm tra deploy.yaml có tồn tại không
+
           
       - name: Update Repo Manifest
         run: |
