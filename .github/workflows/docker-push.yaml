@@ -44,8 +44,6 @@ jobs:
 
       - name: Commit and Push Updated Manifest
         run: |
-          git config --global user.email "txphan99@gmail.com"
-          git config --global user.name "txphan99"
           git add deploy.yaml
           git commit -m "Update manifest to use image ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}"
-          git push origin main
+          git push -u origin main
