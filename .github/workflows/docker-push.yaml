@@ -20,8 +20,8 @@ jobs:
         run: echo "IMAGE_TAG=$(git describe --tags --always || echo latest)" >> $GITHUB_ENV
 
       - name: Build Docker image with tag
-        run: docker build -t $IMAGE_NAME:$app:latest .
+        run: docker build -t $IMAGE_NAME:$app .
 
       - name: Push Docker image with tag
-        run: docker push $IMAGE_NAME:$app:latest
+        run: docker push $IMAGE_NAME:$app
 
