@@ -40,7 +40,7 @@ jobs:
       - name: Update Repo Manifest
         run: |
           cd Repo-config
-          sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}|g" deploy.yaml
+          sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}|g" ./deploy.yaml
 
       - name: Commit and Push Updated Manifest
         run: |
