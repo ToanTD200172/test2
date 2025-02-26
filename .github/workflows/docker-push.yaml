@@ -25,8 +25,15 @@ jobs:
       - name: Push Docker Image to Docker Hub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}
 
+      - name: Clone External Repo
+        run: |
+          git clone https://${{ secrets.REPO_PAT }}@github.com/${{ secrets.REPO_OWNER }}/${{ secrets.REPO_NAME }}.git Repo-config
+          cd Repo-config
+          git checkout main
+          
       - name: Update Repo Manifest
         run: |
+          cd Repo-config
           sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}|g" deploy.yaml
 
       - name: Commit and Push Updated Manifest
