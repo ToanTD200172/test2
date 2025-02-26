@@ -54,3 +54,8 @@ jobs:
           git add .
           git commit -m "Update manifest to use image ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}"
           git push 
+
+      - name: where
+        run: |
+          pwd
+          ls
