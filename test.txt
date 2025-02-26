@@ -1,1 +1,9 @@
  git pull origin main --rebase
+
+ git branch -m main
+ git init
+ git add .
+ git commit -m "name"
+ git push -m origin main
+
+ 
