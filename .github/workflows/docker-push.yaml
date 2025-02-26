@@ -48,6 +48,7 @@ jobs:
           # git push 
       - name: Commit and Push Updated Manifest
         run: |
+          cd Repo-config
           git config --global user.email "txphan99@gmail.com"
           git config --global user.name "txphan99"
           git add .
