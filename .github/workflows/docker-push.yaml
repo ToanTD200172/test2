@@ -17,7 +17,10 @@ jobs:
         run: echo "IMAGE_TAG=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
 
       - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
       - name: Build Docker Image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }} .
@@ -26,36 +29,40 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}
 
       - name: Clone External Repo
+        env:
+          REPO_PAT: ${{ secrets.REPO_PAT }}
+          REPO_OWNER: ${{ secrets.REPO_OWNER }}
+          REPO_NAME: ${{ secrets.REPO_NAME }}
         run: |
-          git clone https://${{ secrets.REPO_PAT }}@github.com/${{ secrets.REPO_OWNER }}/${{ secrets.REPO_NAME }}.git Repo-config
+          git clone https://x-access-token:$REPO_PAT@github.com/$REPO_OWNER/$REPO_NAME.git Repo-config
           cd Repo-config
           git checkout main
 
       - name: Debug External Repo Files
         run: |
           cd Repo-config
-          ls -la  # Liệt kê tất cả các file để kiểm tra deploy.yaml có tồn tại không
+          ls -la  # Kiểm tra thư mục và file, đặc biệt có deploy.yaml không
 
-          
       - name: Update Repo Manifest
         run: |
           cd Repo-config
           sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}|g" deploy.yaml
-          # git config --global user.email "txphan99@gmail.com"
-          # git config --global user.name "txphan99"
-          # git add .
-          # git commit -m "Update manifest to use image ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}"
-          # git push 
+
       - name: Commit and Push Updated Manifest
+        env:
+          GIT_AUTHOR_NAME: "toantran07022001"
+          GIT_AUTHOR_EMAIL: "toantran07022001@gmail.com"
+          GIT_COMMITTER_NAME: "toantran07022001"
+          GIT_COMMITTER_EMAIL: "toantran07022001@gmail.com"
         run: |
           cd Repo-config
-          git config --global user.email "txphan99@gmail.com"
-          git config --global user.name "txphan99"
-          git add .
-          git commit -m "Update manifest to use image ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}"
-          git push 
+          git config user.name "$GIT_AUTHOR_NAME"
+          git config user.email "$GIT_AUTHOR_EMAIL"
+          git add deploy.yaml
+          git commit -m "Update manifest to use image ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}" || echo "No changes to commit"
+          git push origin main
 
-      - name: where
+      - name: Show working directory and files
         run: |
           pwd
-          ls
+          ls -la
