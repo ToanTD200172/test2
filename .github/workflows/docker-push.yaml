@@ -26,7 +26,10 @@ jobs:
         run: |
           docker --version
           docker info
-
+          
+      - name: Disable Docker Buildx (force classic build)
+        run: docker buildx rm default || true
+        
       - name: Build Docker Image (Classic)
         run: |
           echo "Building image ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}"
