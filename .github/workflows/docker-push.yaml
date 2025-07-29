@@ -3,7 +3,7 @@ name: Build, Push Docker Image & Update Manifest
 on:
   push:
     branches:
-      - main  # Chạy khi có push lên branch main
+      - main
 
 jobs:
   build-and-deploy:
@@ -22,8 +22,14 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
-      - name: Build Docker Image
+      - name: Check Docker Version
         run: |
+          docker --version
+          docker info
+
+      - name: Build Docker Image (Classic)
+        run: |
+          echo "Building image ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}"
           docker build -t ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }} .
 
       - name: Push Docker Image to Docker Hub
@@ -42,7 +48,7 @@ jobs:
       - name: Debug External Repo Files
         run: |
           cd Repo-config
-          ls -la  # Kiểm tra thư mục và file, đặc biệt có deploy.yaml không
+          ls -la
 
       - name: Update Repo Manifest
         run: |
@@ -62,8 +68,3 @@ jobs:
           git add deploy.yaml
           git commit -m "Update manifest to use image ${{ secrets.DOCKER_USERNAME }}/app:${{ env.IMAGE_TAG }}" || echo "No changes to commit"
           git push origin main
-
-      - name: Show working directory and files
-        run: |
-          pwd
-          ls -la
