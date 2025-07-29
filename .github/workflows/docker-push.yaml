@@ -51,9 +51,9 @@ jobs:
 
       - name: Commit and Push Updated Manifest
         env:
-          GIT_AUTHOR_NAME: "toantran07022001"
+          GIT_AUTHOR_NAME: "ToanTD200172"
           GIT_AUTHOR_EMAIL: "toantran07022001@gmail.com"
-          GIT_COMMITTER_NAME: "toantran07022001"
+          GIT_COMMITTER_NAME: "ToanTD200172"
           GIT_COMMITTER_EMAIL: "toantran07022001@gmail.com"
         run: |
           cd Repo-config
